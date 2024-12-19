@@ -1,11 +1,28 @@
 from ourQueue import OurQueue
 
-map = [
-    [1, 0, 0, 0],
-    [1, 1, 1, 0],
-    [0, 0, 1, 0],
-    [0, 1, 2, 0],
-]
+from scipy.io import loadmat
+import matplotlib.pyplot as plt
+
+mat_data = loadmat('maze.mat')
+map = mat_data['map'].astype(float)
+
+start_row = 45
+start_column = 4
+
+# map = [
+#     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+#     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+#     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 1, 1, 0, 1, 1, 1, 1, 1, 0],
+#     [0, 1, 1, 0, 1, 1, 1, 1, 1, 0],
+#     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [1, 1, 1, 1, 1, 1, 1, 0, 0, 2],
+# ]
+#
+# start_row = 1
+# start_column = 1
 
 
 def planner(map, start_row, start_column):
@@ -13,6 +30,10 @@ def planner(map, start_row, start_column):
     goal_column, goal_row = get_goal(map)
     value_map = get_value_map(map, goal_row, goal_column)
     path = get_path(value_map, start_row - 1, start_column - 1)
+    if path is None:
+        print("No path available")
+        return value_map, None
+    plot_trajectory(map, goal_row, goal_column, start_row, start_column, path)
     return value_map, path
 
 
@@ -125,9 +146,24 @@ def get_path(value_map, start_row, start_column):
                     current_column -= 1
                     path.append((current_row, current_column))
                     continue
+
+        return None  # no path available
+
     return [(x + 1, y + 1) for x, y in path]
 
 
-value_map, path = planner(map, 1, 2)
-print(value_map)
-print(path)
+def plot_trajectory(map, goal_row, goal_column, start_row, start_col, path):
+    fig, ax = plt.subplots()
+    ax.imshow(map, cmap='Greys', origin='upper')
+    # Adjust start and goal coordinates to match path coordinates
+    ax.plot(start_col - 1, start_row - 1, 'bo')  # Start point (blue)
+    ax.plot(goal_column, goal_row, 'ro')  # Goal point (red)
+
+    # Plot the path
+    for i in range(len(path) - 1):
+        ax.plot([path[i][1] - 1, path[i + 1][1] - 1],
+                [path[i][0] - 1, path[i + 1][0] - 1], 'r-')
+    plt.show()
+
+
+value_map, path = planner(map, start_row, start_column)
