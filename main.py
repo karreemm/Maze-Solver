@@ -1,14 +1,10 @@
 from ourQueue import OurQueue
 
 map = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
-    [0, 1, 0, 1, 1, 1, 1, 0, 1, 0],
-    [0, 1, 0, 1, 0, 0, 1, 0, 1, 0],
-    [0, 1, 0, 1, 0, 0, 1, 0, 1, 0],
-    [0, 1, 1, 1, 1, 1, 1, 1, 2, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    [1, 0, 0, 0],
+    [1, 1, 1, 0],
+    [0, 0, 1, 0],
+    [0, 1, 2, 0],
 ]
 
 
@@ -63,32 +59,75 @@ def get_path(value_map, start_row, start_column):
         # up
         if current_row - 1 >= 0:  # up
             if value_map[current_row - 1][current_column] < value_map[current_row][current_column]:
-                current_row -= 1
-                path.append((current_row, current_column))
-                continue
+                if value_map[current_row - 1][current_column] != 1:
+                    current_row -= 1
+                    path.append((current_row, current_column))
+                    continue
 
         # right
         if current_column + 1 < len(value_map[current_row]):
             if value_map[current_row][current_column + 1] < value_map[current_row][current_column]:
-                current_column += 1
-                path.append((current_row, current_column))
-                continue
+                if value_map[current_row][current_column + 1] != 1:
+                    current_column += 1
+                    path.append((current_row, current_column))
+                    continue
 
         # down
         if current_row + 1 < len(value_map):
             if value_map[current_row + 1][current_column] < value_map[current_row][current_column]:
-                current_row += 1
-                path.append((current_row, current_column))
-                continue
+                if value_map[current_row + 1][current_column] != 1:
+                    current_row += 1
+                    path.append((current_row, current_column))
+                    continue
 
         # left
         if current_column - 1 >= 0:
             if value_map[current_row][current_column - 1] < value_map[current_row][current_column]:
-                current_column -= 1
-                path.append((current_row, current_column))
-                continue
-    path = [(x + 1, y + 1) for x, y in path]
-    return path
+                if value_map[current_row][current_column - 1] != 1:
+                    current_column -= 1
+                    path.append((current_row, current_column))
+                    continue
+
+        # check diagonal directions
+
+        # up-right
+        if current_row - 1 >= 0 and current_column + 1 < len(value_map[current_row]):
+            if value_map[current_row - 1][current_column + 1] < value_map[current_row][current_column]:
+                if value_map[current_row - 1][current_column + 1] != 1:
+                    current_row -= 1
+                    current_column += 1
+                    path.append((current_row, current_column))
+                    continue
+
+        # down-right
+        if current_row + 1 < len(value_map) and current_column + 1 < len(value_map[current_row]):
+            if value_map[current_row + 1][current_column + 1] < value_map[current_row][current_column]:
+                if value_map[current_row + 1][current_column + 1] != 1:
+                    current_row += 1
+                    current_column += 1
+                    path.append((current_row, current_column))
+                    continue
+
+        # down-left
+        if current_row + 1 < len(value_map) and current_column - 1 >= 0:
+            if value_map[current_row + 1][current_column - 1] < value_map[current_row][current_column]:
+                if value_map[current_row + 1][current_column - 1] != 1:
+                    current_row += 1
+                    current_column -= 1
+                    path.append((current_row, current_column))
+                    continue
+
+        # up-left
+        if current_row - 1 >= 0 and current_column - 1 >= 0:
+            if value_map[current_row - 1][current_column - 1] < value_map[current_row][current_column]:
+                if value_map[current_row - 1][current_column - 1] != 1:
+                    current_row -= 1
+                    current_column -= 1
+                    path.append((current_row, current_column))
+                    continue
+    return [(x + 1, y + 1) for x, y in path]
 
 
-value_map, path = planner(map, 1, 1)
+value_map, path = planner(map, 1, 2)
+print(value_map)
+print(path)
