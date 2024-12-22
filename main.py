@@ -33,7 +33,7 @@ def planner(map, start_row, start_column):
     if path is None:
         print("No path available")
         return value_map, None
-    plot_trajectory(map, goal_row, goal_column, start_row, start_column, path)
+    # plot_trajectory(map, goal_row, goal_column, start_row, start_column, path)
     return value_map, path
 
 
@@ -153,16 +153,26 @@ def get_path(value_map, start_row, start_column):
 
 
 def plot_trajectory(map, goal_row, goal_column, start_row, start_col, path):
-    fig, ax = plt.subplots()
-    ax.imshow(map, cmap='Greys', origin='upper')
-    # Adjust start and goal coordinates to match path coordinates
-    ax.plot(start_col - 1, start_row - 1, 'bo')  # Start point (blue)
-    ax.plot(goal_column, goal_row, 'ro')  # Goal point (red)
+    cmap = plt.cm.get_cmap('viridis', 3)
 
-    # Plot the path
-    for i in range(len(path) - 1):
-        ax.plot([path[i][1] - 1, path[i + 1][1] - 1],
-                [path[i][0] - 1, path[i + 1][0] - 1], 'r-')
+    fig, ax = plt.subplots()
+    im = ax.imshow(map, cmap=cmap, vmin=0, vmax=2)
+
+    ax.plot(start_col - 1, start_row - 1, marker='o', color='blue', label='Start', markersize=10)
+
+    ax.plot(goal_column, goal_row, marker='*', color='green', label='Goal', markersize=10)
+
+    if path:
+        path_rows, path_cols = zip(*[(x - 1, y - 1) for x, y in path])
+        ax.plot(path_cols, path_rows, color='red', linewidth=2, label='Path')
+
+    ax.legend(loc='upper right')
+
+    ax.set_title("Grid Map with Shortest Path")
+    ax.set_xlabel("Columns")
+    ax.set_ylabel("Rows")
+
+    # Show the plot
     plt.show()
 
 

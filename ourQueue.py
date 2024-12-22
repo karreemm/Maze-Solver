@@ -33,6 +33,3 @@ class OurQueue:
 
     def size(self):
         return self.length
-    
-
-
