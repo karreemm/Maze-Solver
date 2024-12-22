@@ -20,7 +20,7 @@ start_column = 4
 #     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 #     [1, 1, 1, 1, 1, 1, 1, 0, 0, 2],
 # ]
-
+#
 # start_row = 1
 # start_column = 1
 
@@ -33,7 +33,7 @@ def planner(map, start_row, start_column):
     if path is None:
         print("No path available")
         return value_map, None
-    # plot_trajectory(map, goal_row, goal_column, start_row, start_column, path)
+    plot_trajectory(map, goal_row, goal_column, start_row, start_column, path)
     return value_map, path
 
 
@@ -153,7 +153,7 @@ def get_path(value_map, start_row, start_column):
 
 
 def plot_trajectory(map, goal_row, goal_column, start_row, start_col, path):
-    cmap = plt.cm.get_cmap('viridis', 3)
+    cmap = plt.cm.get_cmap('grey', 3)
 
     fig, ax = plt.subplots()
     im = ax.imshow(map, cmap=cmap, vmin=0, vmax=2)
